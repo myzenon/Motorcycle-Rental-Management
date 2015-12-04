@@ -24,6 +24,8 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-    "Materialize": "materialize#~0.97.3"
+    "Materialize": "materialize#~0.97.3",
+    "angular": "~1.4.8",
+    "angular-route": "~1.4.8"
   }
 }

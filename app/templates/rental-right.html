@@ -1,0 +1,15 @@
+<div class="card z-depth-0">
+  <div class="collection">
+    <div class="clock-frame">
+      <div class="clock-block" ng-controller="ClockCtrl">
+        <span class="day">{{ date | TwoDigits }}</span>
+        <br><br>
+        <span class="date">{{ month }} {{ year }}, {{ hours | TwoDigits }}:{{ minutes | TwoDigits }}:{{ seconds | TwoDigits }}</span>
+        <br>
+        <span class="date"></span>
+      </div>
+    </div>
+    <a href="#!" class="collection-item"><i class="material-icons left">directions_bike</i>Rent Motorcyle</a>
+    <a href="#!" class="collection-item"><i class="material-icons left">search</i>Find Rental History</a>
+  </div>
+</div>

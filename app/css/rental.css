@@ -1,0 +1,39 @@
+.separator {
+  border-bottom: 1px #BBB solid;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  color: #AAA;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+.separator i.material-icons {
+  margin-right: 10px;
+}
+span.badge {
+  color: #AAA;
+}
+span.expire {
+  background-color: #fedede;
+  color: #888;
+}
+.clock-frame {
+  background-image: url('../img/clock-wallpaper.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding: 5vw 0;
+}
+.clock-block {
+  text-align: center;
+}
+span.day {
+  background-color: #FFF;
+  padding: 20px;
+  font-size: 5vw;
+  border-radius: 5px;
+}
+span.date {
+  font-size: 1.2vw;
+  color: #000;
+  font-weight: bold;
+}

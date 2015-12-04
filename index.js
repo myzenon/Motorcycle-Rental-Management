@@ -32,7 +32,12 @@ ipcMain.on('min-app', function () {
 });
 
 ipcMain.on('max-app', function () {
-  mainWindow.maximize();
+  if(mainWindow.isMaximized()) {
+    mainWindow.unmaximize();
+  }
+  else {
+    mainWindow.maximize();
+  }
 });
 
 ipcMain.on('close-app', function () {
