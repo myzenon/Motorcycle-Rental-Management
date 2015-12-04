@@ -1,0 +1,12 @@
+body {
+  background-color: #000;
+
+}
+header {
+  -webkit-app-region: drag;
+  padding: 10px 20px;
+  color: #FFF;
+}
+header a {
+  -webkit-app-region: no-drag;
+}

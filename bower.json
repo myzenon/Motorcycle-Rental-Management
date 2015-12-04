@@ -1,0 +1,29 @@
+{
+  "name": "motorcycle-rental-management",
+  "description": "An application to management motorcycle rental store",
+  "main": "index.js",
+  "authors": [
+    "Zenon 'SI"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "mortorcycle",
+    "rental"
+  ],
+  "homepage": "https://github.com/myzenon/Motorcycle-Rental-Management",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "Materialize": "materialize#~0.97.3"
+  }
+}

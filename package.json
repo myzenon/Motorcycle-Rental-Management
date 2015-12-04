@@ -1,0 +1,25 @@
+{
+  "name": "motorcycle-rental-management",
+  "version": "0.0.1",
+  "description": "An application to management motorcycle rental store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myzenon/Motorcycle-Rental-Management.git"
+  },
+  "keywords": [
+    "mortorcycle",
+    "rental"
+  ],
+  "author": "Zenon 'SI",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/myzenon/Motorcycle-Rental-Management/issues",
+    "email": "si.zenon@gmail.com"
+  },
+  "homepage": "https://github.com/myzenon/Motorcycle-Rental-Management#readme",
+  "dependencies": {}
+}
