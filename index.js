@@ -13,11 +13,13 @@ app.on('ready', function() {
   var electronScreen = electron.screen;
   var size = electronScreen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
-    width: Math.ceil(size.width/1.3),
-    height: Math.ceil(size.height/1.15),
+    width: Math.ceil(size.width/1.4),
+    height: Math.ceil(size.height/1.2),
+    minWidth : Math.ceil(size.width/1.4),
+    minHeight : Math.ceil(size.height/1.2),
     frame : false,
     transparent: false,
-    "node-integration" : false
+    "node-integration" : true
   });
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');
   mainWindow.on('closed', function() {
@@ -25,7 +27,14 @@ app.on('ready', function() {
   });
 });
 
-ipcMain.on('close-app', function () {
+ipcMain.on('min-app', function () {
+  mainWindow.minimize();
+});
+
+ipcMain.on('max-app', function () {
   mainWindow.maximize();
-  // app.quit();
+});
+
+ipcMain.on('close-app', function () {
+  app.quit();
 });

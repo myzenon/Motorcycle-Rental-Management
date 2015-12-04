@@ -1,12 +1,20 @@
 body {
-  background-color: #000;
-
+  background-color: #E7E7E7;
+  overflow: hidden;
 }
-header {
+header nav {
   -webkit-app-region: drag;
-  padding: 10px 20px;
   color: #FFF;
 }
 header a {
   -webkit-app-region: no-drag;
+}
+header nav ul a {
+  font-size: 1.15rem;
+}
+main {
+  overflow-y: auto;
+  position: fixed;
+  height: 100%;
+  padding: 10px 50px;
 }
