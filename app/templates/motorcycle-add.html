@@ -1,0 +1,49 @@
+<div id="addMotorcycle" ng-controller="MotorcycleAddCtrl" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div class="col s12">
+        &nbsp;
+      </div>
+      <div class="col s12">
+        <h4><i class="material-icons left" style="font-size: 3vw;">library_add</i>Add New Motorcycle</h4>
+      </div>
+      <div class="col s12">
+        &nbsp;
+      </div>
+      <div class="col s3 input-field">
+        <label for="cost">Cost (Investment)</label>
+        <input type="number" id="cost" ng-model="form.cost">
+      </div>
+      <div class="col s3 input-field">
+        <label for="collateral">Collateral (Price)</label>
+        <input type="number" id="collateral" ng-model="form.collateral">
+      </div>
+      <div class="col s3 input-field">
+        <label for="ppd">Rental Price per Day</label>
+        <input type="number" id="ppd" ng-model="form.price_per_day">
+      </div>
+      <div class="col s3 input-field">
+        <label for="ppm">Rental Price per Month</label>
+        <input type="number" id="ppm" ng-model="form.price_per_month">
+      </div>
+      <div class="col s4 input-field">
+        <select class="browser-default" ng-model="form.brand" ng-options="brand as brand.name for brand in brands track by brand.id">
+          <option value="" disabled selected>Choose your brand</option>
+        </select>
+        <input type="text" placeholder="Brand Name" ng-model="form.brand_new" ng-show="form.brand.id === 0">
+      </div>
+      <div class="col s4 input-field">
+        <label for="model">Model</label>
+        <input type="text" id="model" ng-model="form.model">
+      </div>
+      <div class="col s4 input-field">
+        <label for="plate_number">Plate Number</label>
+        <input type="text" id="plate_number" ng-model="form.plate_number">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button ng-click="addForm()" class="waves-effect waves-green btn-flat">ADD</button>
+    <button ng-click="resetForm()" class="waves-effect waves-green btn-flat">RESET</button>
+  </div>
+</div>

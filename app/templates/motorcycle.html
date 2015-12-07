@@ -1,67 +1,51 @@
 <div class="row">
   <div class="col s8">
-    <nav>
-   <div class="nav-wrapper">
-     <form>
-       <div class="input-field">
-         <input id="search" type="search" placeholder="Brand, Model or Plate Number" required>
-         <label for="search"><i class="material-icons">search</i></label>
-         <i class="material-icons">close</i>
+    <nav style="background-color: #77c6c7;">
+      <div class="nav-wrapper">
+        <div class="input-field">
+          <input id="search" type="search" placeholder="Search by Brand, Model or Plate Number" ng-model="search">
+          <label for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
        </div>
-     </form>
+     </div>
+   </nav>
+   <div ng-repeat="(brand, motorcycles) in motorcyclesList">
+     <div class="separator">
+       <i class="material-icons left">motorcycle</i>{{ brand }}
+     </div>
+     <div class="collection">
+       <a ng-href="#/motorcycle/{{ motorcycle.id }}" class="collection-item" ng-repeat="motorcycle in motorcycles">
+         {{ motorcycle.brand_name }} {{ motorcycle.model }} [{{ motorcycle.plate_number }}]
+         <span class="badge" ng-show="motorcycle.status === 'rented'">Rented</span>
+         <span class="badge" ng-show="motorcycle.status === 'nrepair'">Need to Repair</span>
+         <span class="badge" ng-show="motorcycle.status === 'wrepair'">Wating for Repair</span>
+       </a>
+     </div>
    </div>
- </nav>
- <div class="separator">
-   <i class="material-icons left">motorcycle</i>Suzuki
- </div>
- <div class="collection">
-   <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-   <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-   <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-   <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-   <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
- </div>
- <div class="separator">
-   <i class="material-icons left">motorcycle</i>Honda
- </div>
- <div class="collection">
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
-    <a href="#!" class="collection-item">Honda ABC [3กง 772]</a>
- </div>
   </div>
   <div class="col s4">
-    <div class="block-image" style="background-image: url('img/repair-w.jpg');">
-      <i class="material-icons">add_box</i>Add New Motorcycle
+    <div class="block-image" ng-click="addMotorcycle()">
+        <i class="material-icons">library_add</i>
+        <br>
+        Add New Motorcycle
     </div>
-    <div class="card z-depth-0">
-        <div class="collection">
-          <div class="block-image" style="background-image: url('img/repair-n.jpg');">
-            Need to repair
-          </div>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-        </div>
+    <div ng-hide="nrepairList.length === 0">
+      <div class="separator">
+        <i class="material-icons left">stars</i>Need To Repair
+      </div>
+      <div class="collection">
+         <a ng-href="#/repair/{{ repair.id }}" class="collection-item" ng-repeat="repair in nrepairList">{{ repair.brand_name }} {{ repair.model }} [{{ repair.plate_number }}]</a>
+      </div>
     </div>
-    <div class="card z-depth-0">
-        <div class="collection">
-          <div class="block-image" style="background-image: url('img/repair-w.jpg');">
-            Wating for repair
-          </div>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-          <a href="#!" class="collection-item">Suzuki ABC [1กค 472]</a>
-        </div>
+    <div ng-hide="wrepairList.length === 0">
+      <div class="separator">
+        <i class="material-icons left">build</i>Waiting for repair
+      </div>
+      <div class="collection">
+         <a ng-href="#/repair/{{ repair.id }}" class="collection-item" ng-repeat="repair in wrepairList">{{ repair.brand_name }} {{ repair.model }} [{{ repair.plate_number }}]</a>
+      </div>
     </div>
   </div>
 </div>
+<div id="add-box"></div>
 <link rel="stylesheet" href="css/motorcycle.css" charset="utf-8">
-<link rel="stylesheet" href="css/rental.css" charset="utf-8">

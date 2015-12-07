@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col s4">
+    <div class="card">
+      <div class="card-image block-image">
+          <span class="card-title">{{ motorcycle.brand_name }} {{ motorcycle.model }}</span>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col s5 right-align"><strong>Brand : </strong></div>
+          <div class="col s7">{{ motorcycle.brand_name }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Model : </strong></div>
+          <div class="col s7">{{ motorcycle.model }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Plate Number : </strong></div>
+          <div class="col s7">{{ motorcycle.plate_number }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Collateral : </strong></div>
+          <div class="col s7">{{ motorcycle.collateral }}</div>
+        </div>
+        <div class="row" ng-show="motorcycle.price_per_day">
+          <div class="col s5 right-align"><strong>Price per Day : </strong></div>
+          <div class="col s7">{{ motorcycle.price_per_day }}</div>
+        </div>
+        <div class="row" ng-show="motorcycle.price_per_month">
+          <div class="col s5 right-align"><strong>Price per Month : </strong></div>
+          <div class="col s7">{{ motorcycle.price_per_month }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Status : </strong></div>
+          <div class="col s7">{{ motorcycle.status | Status }}</div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align">
+              <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col s8">
+    <div class="card">
+      <div class="card-content">
+        <h5>&nbsp;Rent This Motorcycle</h5>
+        <div class="row">
+          <div class="col s4 input-field">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" ng-model="form.firstname" ng-disabled="motorcycle.status !== 'avaliable'">
+          </div>
+          <div class="col s4 input-field">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" ng-model="form.lastname" ng-disabled="motorcycle.status !== 'avaliable'">
+          </div>
+          <div class="col s4 input-field">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" ng-model="form.phone" ng-disabled="motorcycle.status !== 'avaliable'">
+          </div>
+          <div class="col s6 input-field">
+            <label for="dlnum">Driving License Number</label>
+            <input type="text" id="dlnum" ng-model="form.dlnum" ng-disabled="motorcycle.status !== 'avaliable'">
+          </div>
+          <div class="col s6 input-field">
+            <label for="cznum">Citizen Number / Passport</label>
+            <input type="text" id="cznum" ng-model="form.cznum" ng-disabled="motorcycle.status !== 'avaliable'">
+          </div>
+          <div class="col s6">
+            <div class="input-field">
+              <input name="rent" type="radio" id="rentDay" value="day" ng-model="form.type" ng-disabled="motorcycle.price_per_day === null || motorcycle.status !== 'avaliable'">
+              <label for="rentDay">Rent by Days</label>
+            </div>
+            <div class="input-field" ng-show="form.type == 'day'">
+              <input type="number" class="center-align" ng-model="form.day" ng-disabled="form.type != 'day'">
+            </div>
+            <div ng-show="form.type == 'day'">
+              <strong>Return Date : </strong>{{ form.day > 0 ? getNextDate(form.day, 1, 'day') : 'None' }}
+            </div>
+            <div ng-show="form.type == 'day'">
+              <strong>Cost : </strong> {{ form.day > 0 ? motorcycle.price_per_day * form.day : 'None' }}
+            </div>
+            <div ng-show="form.type == 'day'">
+              <strong>Total Cost : </strong> {{ (form.day > 0 ? motorcycle.price_per_day * form.day : 0) + motorcycle.collateral }}
+            </div>
+          </div>
+          <div class="col s6">
+            <div class="input-field">
+              <input name="rent" type="radio" id="rentMonth" value="month" ng-model="form.type" ng-disabled="motorcycle.price_per_month === null || motorcycle.status !== 'avaliable'">
+              <label for="rentMonth">Rent by Months</label>
+            </div>
+            <div class="input-field" ng-show="form.type == 'month'">
+              <input type="number" class="center-align" ng-model="form.month" ng-disabled="form.type != 'month'">
+            </div>
+            <div ng-show="form.type == 'month'">
+              <strong>Return Date : </strong>{{ form.month > 0 ? getNextDate(form.month, 1, 'month') : 'None' }}
+            </div>
+            <div ng-show="form.type == 'month'">
+              <strong>Cost : </strong> {{ form.month > 0 ? motorcycle.price_per_month * form.month : 'None' }}
+            </div>
+            <div ng-show="form.type == 'month'">
+              <strong>Total Cost : </strong> {{ (form.month > 0 ? motorcycle.price_per_month * form.month : 0) + motorcycle.collateral }}
+            </div>
+          </div>
+          <div class="col s12 input-field right-align">
+            <button class="btn waves-effect waves-light" ng-click="addRental()" ng-disabled="motorcycle.status !== 'avaliable'">RENT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="css/motorcycle-view.css">

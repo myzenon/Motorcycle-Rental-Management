@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col s8 card">
+    <div class="card-content center-align">
+      <div class="row">
+        <div class="col s12 headeri-code">
+          <i class="material-icons">done_all</i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 header">
+          Return Complete
+        </div>
+      </div>
+      <div class="row" ng-hide="message === null">
+        <div class="col s12">
+          {{ message }}
+        </div>
+      </div>
+      <div class="row" ng-hide="message === null">
+        <div class="col s12">
+          <blockquote class="blockquote-code">
+            Amount : <strong>{{ amount }}</strong>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="css/rental-success.css">

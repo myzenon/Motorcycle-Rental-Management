@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col s4">
+    <div class="card">
+      <div class="card-image block-image">
+          <span class="card-title">{{ motorcycle.brand_name }} {{ motorcycle.model }}</span>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col s5 right-align"><strong>Brand : </strong></div>
+          <div class="col s7">{{ motorcycle.brand_name }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Model : </strong></div>
+          <div class="col s7">{{ motorcycle.model }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Plate Number : </strong></div>
+          <div class="col s7">{{ motorcycle.plate_number }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Cost : </strong></div>
+          <div class="col s7">{{ motorcycle.cost }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Collateral : </strong></div>
+          <div class="col s7">{{ motorcycle.collateral }}</div>
+        </div>
+        <div class="row" ng-show="motorcycle.price_per_day">
+          <div class="col s5 right-align"><strong>Price per Day : </strong></div>
+          <div class="col s7">{{ motorcycle.price_per_day }}</div>
+        </div>
+        <div class="row" ng-show="motorcycle.price_per_month">
+          <div class="col s5 right-align"><strong>Price per Month : </strong></div>
+          <div class="col s7">{{ motorcycle.price_per_month }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Status : </strong></div>
+          <div class="col s7">{{ motorcycle.status | Status }}</div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align" style="margin-bottom : 10px;">
+            <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
+          </div>
+          <div class="col s12 center-align" style="margin-bottom : 10px;">
+            <button ng-click="editMotorcycle()" class="btn white waves-effect waves-green" style="color: #000;">EDIT</button>
+          </div>
+          <div class="col s12 center-align" style="margin-bottom : 10px;">
+            <button ng-click="deleteMotorcycle()" class="btn white waves-effect waves-red" style="color: #000;">DELETE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col s8">
+   <div ng-hide="repairList.length === 0">
+     <div class="separator">
+       <i class="material-icons left">build</i>Repair History
+     </div>
+     <div class="collection">
+       <a ng-href="#/repair/{{ repair.id }}" ng-repeat="repair in repairList" class="collection-item">
+         Send : {{ repair.date_send }} / Return : {{ repair.date_return }}
+       </a>
+     </div>
+   </div>
+   <div>
+     <div class="separator">
+       <i class="material-icons left">directions_bike</i>Rental History
+     </div>
+     <div class="collection" ng-hide="rentalList.length === 0">
+       <a ng-href="#/rent/{{ rental.id }}" class="collection-item" ng-repeat="rental in rentalList">
+          {{ rental.fistname + ' ' + rental.lastname }}&nbsp;&nbsp;<small>({{ showDate(rental.date_rent) }})</small>
+          <span class="badge">{{ rental.date_return_returned === null ? 'Rented' : showDate(rental.date_return_returned) }}</span>
+       </a>
+     </div>
+   </div>
+  </div>
+</div>
+<div id="edit-box"></div>
+<link rel="stylesheet" href="css/motorcycle-view.css">

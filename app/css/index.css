@@ -10,7 +10,7 @@ header nav {
   background-color: #FFF;
 }
 .nav-wrapper li.active {
-  background-color: #0097a7;
+  background-color: #0097A7;
   color: #FFF;
 }
 .nav-wrapper li.active a {
@@ -30,7 +30,7 @@ header nav ul a {
 main {
   z-index: 0;
   overflow-y: auto;
-  position: fixed;
+  /*position: fixed;*/
   width: 100%;
   height: 100%;
   padding: 15px;

@@ -1,7 +1,13 @@
 const electron = require('electron');
-const app = electron.app;  // Module to control application life.
-const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
 const ipcMain = require('electron').ipcMain;
+
+var mysqlConfig = require('./mysqlConfig.json');
+var mysqlPool = require('mysql').createPool(mysqlConfig);
+
+require('./rental.js')(ipcMain, mysqlPool);
+require('./motorcycle.js')(ipcMain, mysqlPool);
 
 var mainWindow = null;
 
@@ -13,9 +19,9 @@ app.on('ready', function() {
   var electronScreen = electron.screen;
   var size = electronScreen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
-    width: Math.ceil(size.width/1.4),
+    width: Math.ceil(size.width/1.3),
     height: Math.ceil(size.height/1.2),
-    minWidth : Math.ceil(size.width/1.4),
+    minWidth : Math.ceil(size.width/1.3),
     minHeight : Math.ceil(size.height/1.2),
     frame : false,
     transparent: false,

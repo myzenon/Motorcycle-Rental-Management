@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col s4">
+    <div class="card">
+      <div class="card-image block-image">
+          <span class="card-title">{{ rental.brand_name }} {{ rental.model }}</span>
+      </div>
+      <div class="card-content">
+        <div class="row">
+          <div class="col s5 right-align"><strong>Brand : </strong></div>
+          <div class="col s7">{{ rental.brand_name }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Model : </strong></div>
+          <div class="col s7">{{ rental.model }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Plate Number : </strong></div>
+          <div class="col s7">{{ rental.plate_number }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Collateral : </strong></div>
+          <div class="col s7">{{ rental.collateral }}</div>
+        </div>
+        <div class="row" ng-show="rental.price_per_day">
+          <div class="col s5 right-align"><strong>Price per Day : </strong></div>
+          <div class="col s7">{{ rental.price_per_day }}</div>
+        </div>
+        <div class="row" ng-show="rental.price_per_month">
+          <div class="col s5 right-align"><strong>Price per Month : </strong></div>
+          <div class="col s7">{{ rental.price_per_month }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Status : </strong></div>
+          <div class="col s7">{{ rental.status | Status }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Date Rented : </strong></div>
+          <div class="col s7">{{ showDate(rental.date_rent, false) }}</div>
+        </div>
+        <div class="row">
+          <div class="col s5 right-align"><strong>Date Return : </strong></div>
+          <div class="col s7">{{ showDate(rental.date_return_expect) }}</div>
+        </div>
+        <div class="row" ng-hide="rental.date_return_returned === null">
+          <div class="col s5 right-align"><strong>Date Returned : </strong></div>
+          <div class="col s7" ng-bind-html="checkDate(rental.date_return_returned, rental.date_return_expect)"></div>
+        </div>
+        <div class="row">
+          <div class="col s12 center-align">
+            <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col s8">
+    <div class="card">
+      <div class="card-content">
+        <h5>&nbsp;{{ rental.date_return_returned !== null ? 'Return Infomation' : 'Return This Motorcycle'  }}</h5>
+        <div class="row">
+          <div class="col s4 input-field">
+            <input type="checkbox" class="filled-in" id="nrepair" ng-model="form.nrepair" ng-disabled="rental.date_return_returned !== null">
+            <label for="nrepair">Need To Repair</label>
+          </div>
+          <div class="col s4 input-field">
+            <label for="fine" ng-class="{ 'active' : rental.date_return_returned !== null}">Fine</label>
+            <input type="number" id="fine" ng-model="form.fine" ng-disabled="rental.date_return_returned !== null">
+          </div>
+          <div class="col s4 input-field right-align">
+            <button class="btn waves-effect waves-light" ng-click="returnRental()" ng-hide="rental.date_return_returned !== null">RETURN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-content">
+        <h5>&nbsp;Rental Information (#{{ rental.id }})</h5>
+        <div class="row">
+          <div class="col s4 input-field">
+            <label for="firstname" class="active">First Name</label>
+            <input type="text" id="firstname" ng-model="rental.firstname" ng-disabled="rental.date_rent !== null">
+          </div>
+          <div class="col s4 input-field">
+            <label for="lastname" class="active">Last Name</label>
+            <input type="text" id="lastname" ng-model="rental.lastname" ng-disabled="rental.date_rent !== null">
+          </div>
+          <div class="col s4 input-field">
+            <label for="phone" class="active">Phone Number</label>
+            <input type="text" id="phone" ng-model="rental.phone" ng-disabled="rental.date_rent !== null">
+          </div>
+          <div class="col s6 input-field">
+            <label for="dlnum" class="active">Driving License Number</label>
+            <input type="text" id="dlnum" ng-model="rental.dlnum" ng-disabled="rental.date_rent !== null">
+          </div>
+          <div class="col s6 input-field">
+            <label for="cznum" class="active">Citizen Number / Passport</label>
+            <input type="text" id="cznum" ng-model="rental.cznum" ng-disabled="rental.date_rent !== null">
+          </div>
+          <div class="col s6">
+            <div class="input-field">
+              <input name="rent" type="radio" id="rentDay" value="day" ng-model="rental.type" ng-disabled="rental.price_per_day === null || rental.date_rent !== null">
+              <label for="rentDay">Rent by Days</label>
+            </div>
+            <div class="input-field" ng-show="rental.type == 'day'">
+              <input type="number" class="center-align" ng-model="rental.amount" ng-disabled="rental.date_rent !== null">
+            </div>
+            <div ng-show="rental.type == 'day'">
+              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'day') : 'None' }}
+            </div>
+            <div ng-show="rental.type == 'day'">
+              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price_per_day * rental.amount : 'None' }}
+            </div>
+            <div ng-show="rental.type == 'day'">
+              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price_per_day * rental.amount : 0) + rental.collateral }}
+            </div>
+          </div>
+          <div class="col s6">
+            <div class="input-field">
+              <input name="rent" type="radio" id="rentMonth" value="month" ng-model="rental.type" ng-disabled="rental.price_per_month === null || rental.date_rent !== null">
+              <label for="rentMonth">Rent by Months</label>
+            </div>
+            <div class="input-field" ng-show="rental.type == 'month'">
+              <input type="number" class="center-align" ng-model="rental.amount" ng-disabled="rental.date_rent !== null">
+            </div>
+            <div ng-show="rental.type == 'month'">
+              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'month') : 'None' }}
+            </div>
+            <div ng-show="rental.type == 'month'">
+              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price_per_month * rental.amount : 'None' }}
+            </div>
+            <div ng-show="rental.type == 'month'">
+              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price_per_month * rental.amount : 0) + rental.collateral }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="css/motorcycle-view.css">

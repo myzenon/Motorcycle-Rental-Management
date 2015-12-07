@@ -1,32 +1,28 @@
 <div class="row">
   <div class="col s9">
-    <div class="separator">
-      <i class="material-icons left">beenhere</i>Return Today
+    <div>
+      <div class="separator">
+        <i class="material-icons left">beenhere</i>Return Today
+      </div>
+      <div class="collection" ng-hide="rentalsListToday.length === 0">
+        <a ng-href="#/rent/{{ rental.id }}" class="collection-item" ng-repeat="rental in rentalsListToday">
+          {{ rental.brand_name }} {{ rental.model }} [{{ rental.plate_number }}]
+          &nbsp;&nbsp;<small>({{ rental.firstname + ' ' + rental.lastname }})</small>
+          <span ng-bind-html="rental.date_return_expect | DateReturn"></span>
+        </a>
+      </div>
     </div>
-    <div class="collection">
-      <a href="#!" class="collection-item">Suzuki ABC [1กค 472]&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge">14 January 2016</span></a>
-    </div>
-    <div class="separator">
-      <i class="material-icons left">sms_failed</i>Return Date Expire
-    </div>
-    <div class="collection">
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge expire">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge expire">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge expire">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge expire">14 January 2016</span></a>
-      <a href="#!" class="collection-item">Suzuki 123&nbsp;&nbsp;<small>(Chetthaphan Kammasit)</small><span class="badge expire">14 January 2016</span></a>
-    </div>
-    <div class="separator">
-      <i class="material-icons left">build</i>Need to repair
-    </div>
-    <div class="collection">
-      <a href="#!" class="collection-item">Suzuki 123</a>
-      <a href="#!" class="collection-item">Suzuki 123</a>
+    <div>
+      <div class="separator">
+        <i class="material-icons left">sms_failed</i>Return Date Expire
+      </div>
+      <div class="collection" ng-hide="rentalsListExpire.length === 0">
+        <a ng-href="#/rent/{{ rental.id }}" class="collection-item" ng-repeat="rental in rentalsListExpire">
+          {{ rental.brand_name }} {{ rental.model }} [{{ rental.plate_number }}]
+          &nbsp;&nbsp;<small>({{ rental.firstname + ' ' + rental.lastname }})</small>
+          <span ng-bind-html="rental.date_return_expect | DateReturn"></span>
+        </a>
+      </div>
     </div>
   </div>
   <div class="col s3" ng-include="src = 'templates/rental-right.html'"></div>

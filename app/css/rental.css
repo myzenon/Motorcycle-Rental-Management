@@ -1,23 +1,5 @@
-.separator {
-  border-bottom: 1px #BBB solid;
-  padding-left: 10px;
-  padding-bottom: 5px;
-  color: #AAA;
-  margin-bottom: 10px;
-  font-size: 1.2em;
-}
-.separator i.material-icons {
-  margin-right: 10px;
-}
-span.badge {
-  color: #AAA;
-}
-span.expire {
-  background-color: #fedede;
-  color: #888;
-}
 .clock-frame {
-  background-image: url('../img/clock-wallpaper.png');
+  background-image: url('../img/clock-wallpaper.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
