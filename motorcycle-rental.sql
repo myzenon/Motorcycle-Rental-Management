@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 07, 2015 at 09:26 AM
+-- Generation Time: Dec 07, 2015 at 09:47 AM
 -- Server version: 5.6.26
 -- PHP Version: 5.6.12
 
@@ -34,6 +34,8 @@ BEGIN
 	DECLARE amount INT;
     SELECT motorcycle.brand_id INTO brand_id FROM motorcycle WHERE motorcycle.id = id;
 	DELETE FROM motorcycle WHERE motorcycle.id = id;
+    DELETE FROM rental WHERE rental.motorcycle_id = id;
+    DELETE FROM repair WHERE repair.motorcycle_id = id;
     SELECT COUNT(motorcycle.brand_id) INTO amount FROM motorcycle WHERE motorcycle.brand_id = brand_id;
     IF amount = 0 THEN
     	DELETE FROM brand WHERE brand.id = brand_id;
@@ -117,7 +119,6 @@ CREATE TABLE IF NOT EXISTS `brand` (
 --
 
 INSERT INTO `brand` (`id`, `name`) VALUES
-(1, 'Yamaha'),
 (2, 'Test'),
 (3, 'Suzuki'),
 (4, 'YUO'),
@@ -156,7 +157,6 @@ INSERT INTO `motorcycle` (`id`, `brand_id`, `model`, `plate_number`, `cost`, `co
 (28, 28, 'FX 1', '0 กง', 34534, 3453454, NULL, 345345, 'avaliable'),
 (29, 4, '34534', '345345', 43534, 34534, NULL, NULL, 'avaliable'),
 (31, 2, '435345', '545345', 4534, 4345345, NULL, NULL, 'avaliable'),
-(32, 1, '34534', '4353', 45345, 34534, NULL, 345345, 'nrepair'),
 (36, 7, '322', '345345', 34, 54345, 10, 200, 'rented'),
 (40, 5, '345345', '345345345', 45345345, 34534534, 45345, 5345345, 'rented'),
 (41, 2, '435345', '4545', 45345, 4534534, 5435345, NULL, 'rented');
@@ -228,7 +228,6 @@ INSERT INTO `rental` (`id`, `motorcycle_id`, `firstname`, `lastname`, `cznum`, `
 (3, 41, 'erewr', 'ewrewr', '543534', '24', '23423', 'day', 3, '2015-12-07', '2015-11-25', '2015-12-07', 0, 1000),
 (4, 41, 'Name', 'Last', '777877787', '2578643489', '1121', 'day', 10, '2015-12-07', '2015-12-08', '2015-12-07', 0, 1000),
 (5, 41, '35345', '435345', '435345', '345345', '435345', 'day', 32, '2015-11-27', '2015-12-02', '2015-12-07', 0, 100),
-(6, 32, 'dsfdsf', 'dsfdsf', '54645645645645', '465645645', '4353454', 'month', 2, '2015-12-07', '2016-02-07', '2015-12-07', 1, 5000),
 (7, 41, '353454', '5345345', '4534534', '53453453', '4564564565', 'day', 3, '2015-12-07', '2015-12-10', '2015-12-07', 0, 1000000000),
 (8, 41, '345', '654645', '5645', '5345', '4564564', 'day', 3, '2015-12-07', '2015-12-10', '2015-12-07', 0, 4534534),
 (9, 41, '453', '5345345', '43534', '435', '435', 'day', 1, '2015-12-07', '2015-12-08', '2015-12-07', 0, NULL),
@@ -306,8 +305,7 @@ CREATE TABLE IF NOT EXISTS `repair` (
 --
 
 INSERT INTO `repair` (`id`, `motorcycle_id`, `problem`, `cause`, `cost`, `date_send`, `date_return`) VALUES
-(1, 36, '45345', '5345345', 34534, '2015-12-06', '2015-12-06'),
-(3, 32, NULL, NULL, NULL, NULL, NULL);
+(1, 36, '45345', '5345345', 34534, '2015-12-06', '2015-12-06');
 
 -- --------------------------------------------------------
 
