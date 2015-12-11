@@ -1,4 +1,4 @@
-module.exports = function (ipcMain, mysqlPool) {
+module.exports = function (fs, ipcMain, mysqlPool, debug) {
   ipcMain.on('add-motorcycle', function (event, data) {
     mysqlPool.getConnection(function(error, connection) {
       if(error) {
@@ -6,7 +6,7 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        query_command = 'CALL insert_motorcycle(@brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month)'
+        var query_command = 'SET @id = null; CALL insert_motorcycle(@brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month, @id); SELECT @id;'
           .replace('@brand_id', data.brand.id)
           .replace('@brand_new', data.brand_new)
           .replace('@model', data.model)
@@ -16,12 +16,20 @@ module.exports = function (ipcMain, mysqlPool) {
           .replace('@price_per_day', data.price_per_day === '' ? null : data.price_per_day)
           .replace('@price_per_month', data.price_per_month === '' ? null : data.price_per_month)
         ;
-        console.log(query_command);
-        connection.query(query_command, function(error) {
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, row) {
           if(error) {
             event.sender.send('mysql-error', error);
           }
           else {
+            if(data.image) {
+              var extension_split = data.image.split('.');
+              var extension = extension_split[extension_split.length - 1];
+              fs.createReadStream(data.image).pipe(fs.createWriteStream('./app/img/motorcycle/' + row[2][0]['@id'] + '.' + extension));
+              console.log('./app/img/motorcycle/' + row[2][0]['@id'] + '.' + extension);
+            }
             event.sender.send('add-motorcycle-complete');
           }
           connection.release();
@@ -36,7 +44,7 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        query_command = 'CALL edit_motorcycle(@id, @brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month)'
+        var query_command = 'CALL edit_motorcycle(@id, @brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month)'
           .replace('@id', data.id)
           .replace('@brand_id', data.brand.id)
           .replace('@brand_new', data.brand_new)
@@ -47,7 +55,9 @@ module.exports = function (ipcMain, mysqlPool) {
           .replace('@price_per_day', data.price_per_day === '' ? null : data.price_per_day)
           .replace('@price_per_month', data.price_per_month === '' ? null : data.price_per_month)
         ;
-        console.log(query_command);
+        if(debug) {
+          console.log(query_command);
+        }
         connection.query(query_command, function(error) {
           if(error) {
             event.sender.send('mysql-error', error);
@@ -68,7 +78,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('CALL delete_motorcycle(' + id + ')', function(error, rows) {
+        var query_command = 'CALL delete_motorcycle(' + id + ')';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -89,7 +103,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM brand', function(error, rows) {
+        var query_command = 'SELECT * FROM brand';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -110,11 +128,14 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        $query_command = 'SELECT * FROM motorcycle_list';
+        var query_command = 'SELECT * FROM motorcycle_list';
         if(data.filter) {
-          $query_command += ' WHERE status = "avaliable"';
+          query_command += ' WHERE status = "avaliable"';
         }
-        connection.query($query_command, function(error, rows) {
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -135,11 +156,14 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        $query_command = 'SELECT * FROM motorcycle_list WHERE (CONCAT(brand_name, " ", model) LIKE "%' + data.search  + '%" OR plate_number LIKE "%' + data.search  + '%")';
+        var query_command = 'SELECT * FROM motorcycle_list WHERE (CONCAT(brand_name, " ", model) LIKE "%' + data.search  + '%" OR plate_number LIKE "%' + data.search  + '%")';
         if(data.filter) {
-          $query_command += ' AND status = "avaliable"'
+          query_command += ' AND status = "avaliable"'
         }
-        connection.query($query_command, function(error, rows) {
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -160,7 +184,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM motorcycle_view WHERE id = ' + id, function(error, rows) {
+        var query_command = 'SELECT * FROM motorcycle_view WHERE id = ' + id;
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -181,7 +209,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM repair_view WHERE date_send IS NULL = 0 AND date_return IS NULL = 0 AND motorcycle_id = ' + id, function(error, rows) {
+        var query_command = 'SELECT * FROM repair_view WHERE date_send IS NULL = 0 AND date_return IS NULL = 0 AND motorcycle_id = ' + id;
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -202,7 +234,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM rental_list WHERE motorcycle_id = ' + id, function(error, rows) {
+        var query_command = 'SELECT * FROM rental_list WHERE motorcycle_id = ' + id;
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -223,7 +259,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM repair_view WHERE date_send IS NULL = 1', function(error, rows) {
+        var query_command = 'SELECT * FROM repair_view WHERE date_send IS NULL = 1';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -244,7 +284,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM repair_view WHERE date_send IS NULL = 0 AND date_return IS NULL = 1', function(error, rows) {
+        var query_command = 'SELECT * FROM repair_view WHERE date_send IS NULL = 0 AND date_return IS NULL = 1';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -265,7 +309,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM repair_view WHERE id = ' + id, function(error, rows) {
+        var query_command = 'SELECT * FROM repair_view WHERE id = ' + id;
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -285,13 +333,15 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        query_command = 'CALL update_repair(@id, "@problem", @cause, @cost)'
+        var query_command = 'CALL update_repair(@id, "@problem", @cause, @cost)'
           .replace('@id', data.id)
           .replace('@problem', data.problem)
           .replace('@cause', data.cause === null ? null : '"' + data.cause + '"')
           .replace('@cost', data.cost)
         ;
-        console.log(query_command);
+        if(debug) {
+          console.log(query_command);
+        }
         connection.query(query_command, function(error) {
           if(error) {
             event.sender.send('mysql-error', error);

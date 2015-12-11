@@ -1,6 +1,5 @@
 div.col nav {
-  margin-bottom: 25px;
-  margin-top: 10px;
+  margin-bottom: 20px;
 }
 div.block-image {
   background-image: url('../img/add-moto.jpg');
@@ -12,7 +11,6 @@ div.block-image {
   padding: 35px 0px;
   text-align: center;
   color: #FAFAFA;
-  margin-top: 10px;
   margin-bottom: 20px;
   cursor: pointer;
 }

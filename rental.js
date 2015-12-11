@@ -1,4 +1,4 @@
-module.exports = function (ipcMain, mysqlPool) {
+module.exports = function (ipcMain, mysqlPool, debug) {
   ipcMain.on('add-rental', function (event, data) {
     mysqlPool.getConnection(function(error, connection) {
       if(error) {
@@ -6,7 +6,7 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        query_command = 'CALL insert_rental (@motorcycle_id, "@firstname", "@lastname", "@cznum", "@dlnum", "@phone", "@type", @amount, "@date_return_expect")'
+        var query_command = 'CALL insert_rental (@motorcycle_id, "@firstname", "@lastname", "@cznum", "@dlnum", "@phone", "@type", @amount, "@date_return_expect")'
           .replace('@motorcycle_id', data.motorcycle_id)
           .replace('@firstname', data.firstname)
           .replace('@lastname', data.lastname)
@@ -17,7 +17,9 @@ module.exports = function (ipcMain, mysqlPool) {
           .replace('@amount', data.amount)
           .replace('@date_return_expect', data.date_return_expect)
         ;
-        console.log(query_command);
+        if(debug) {
+          console.log(query_command);
+        }
         connection.query(query_command, function(error) {
           if(error) {
             event.sender.send('mysql-error', error);
@@ -38,7 +40,11 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        connection.query('SELECT * FROM rental_list', function(error, rows) {
+        var query_command = 'SELECT * FROM rental_list';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -59,12 +65,15 @@ module.exports = function (ipcMain, mysqlPool) {
         return;
       }
       else {
-        $query_command = 'SELECT * FROM rental_list WHERE';
-        $query_command += ' (CONCAT(brand_name, " ", model) LIKE "%' + data  + '%"';
-        $query_command += ' OR plate_number LIKE "%' + data + '%"';
-        $query_command += ' OR id LIKE "%' + data + '%")';
-        $query_command += ' OR (CONCAT(firstname, " ", lastname) LIKE  "%' + data + '%")';
-        connection.query($query_command, function(error, rows) {
+        var query_command = 'SELECT * FROM rental_list WHERE';
+        query_command += ' (CONCAT(brand_name, " ", model) LIKE "%' + data  + '%"';
+        query_command += ' OR plate_number LIKE "%' + data + '%"';
+        query_command += ' OR id LIKE "%' + data + '%")';
+        query_command += ' OR (CONCAT(firstname, " ", lastname) LIKE  "%' + data + '%")';
+        if(debug) {
+          console.log(query_command);
+        }
+        connection.query(query_command, function(error, rows) {
           if(error) {
             event.sender.send('mysql-error', error);
             event.returnValue = null;
@@ -88,6 +97,9 @@ module.exports = function (ipcMain, mysqlPool) {
         var query_command = 'SELECT * FROM rental_view';
         if(id) {
           query_command += ' WHERE id = ' + id;
+        }
+        if(debug) {
+          console.log(query_command);
         }
         connection.query(query_command, function(error, rows) {
           if(error) {
@@ -114,7 +126,9 @@ module.exports = function (ipcMain, mysqlPool) {
           .replace('@nrepair', data.nrepair)
           .replace('@fine', data.fine)
         ;
-        console.log(query_command);
+        if(debug) {
+          console.log(query_command);
+        }
         connection.query(query_command, function(error) {
           if(error) {
             event.sender.send('mysql-error', error);

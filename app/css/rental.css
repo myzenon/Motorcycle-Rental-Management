@@ -1,3 +1,9 @@
+.clock-card {
+  margin: 0!important;
+}
+.clock-collection {
+  margin: 0!important;
+}
 .clock-frame {
   background-image: url('../img/clock-wallpaper.jpg');
   background-size: cover;

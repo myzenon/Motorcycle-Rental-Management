@@ -2,5 +2,6 @@
   "host"     : "localhost",
   "user"     : "root",
   "password" : "",
-  "database" : "motorcycle-rental"
+  "database" : "motorcycle-rental",
+  "multipleStatements" : "true"
 }

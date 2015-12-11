@@ -3,9 +3,12 @@ const ipcRenderer = require('electron').ipcRenderer;
 ipcRenderer.on('mysql-error', function (event, error) {
   console.log(error);
   if(error.code === "ECONNREFUSED") {
+    $('#mysql-unconnect').fadeIn();
     error.code = "Error : Can't Connect To Database Server";
   }
-  Materialize.toast(error.code, 5000);
+  else {
+    Materialize.toast(error.code, 5000);
+  }
 });
 
 ipcRenderer.on('add-rental-complete', function (event, data) {

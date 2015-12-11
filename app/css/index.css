@@ -1,5 +1,6 @@
 body {
-  background-color: #E7E7E7;
+  /*background-color: #E7E7E7;*/
+  background-color: #E9E9E9;
   overflow: hidden;
 }
 header {
@@ -7,10 +8,11 @@ header {
 }
 header nav {
   padding-left: 25px;
-  background-color: #FFF;
+  background-color: #555;
 }
 .nav-wrapper li.active {
   background-color: #0097A7;
+  border-bottom: 4px solid #40d6e6;
   color: #FFF;
 }
 .nav-wrapper li.active a {
@@ -25,13 +27,36 @@ header a {
 }
 header nav ul a {
   font-size: 1.15rem;
-  color: #999;
+  color: #DDD;
 }
 main {
   z-index: 0;
   overflow-y: auto;
-  /*position: fixed;*/
   width: 100%;
   height: 100%;
   padding: 15px;
+}
+#mysql-unconnect {
+	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.9);
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 10000;
+	display: none;
+}
+.mysql-unconnect-msg {
+	color: #FFF;
+	text-align: center;
+	font-size: 3em;
+	height: 100%;
+	top: 80%;
+	position: relative;
+	-webkit-transform: translateY(-50%);
+}
+.mysql-unconnect-msg i {
+	font-size: 4.5em;
+  cursor: pointer;
+}
+.mysql-unconnect-msg div {
+  margin-top: 1%;
 }

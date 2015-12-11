@@ -91,6 +91,9 @@ angular.module('motorcycleApp')
       else if($scope.form.phone == '') {
         Materialize.toast('Error : Please Input Phone Number', 3000);
       }
+      else if(!$scope.form.phone.match(/^\d{10}$/)) {
+        Materialize.toast('Error : Please Input Phone Number only 10 Digits', 3000);
+      }
       else if($scope.form.model === '') {
         Materialize.toast('Error : Please Input Model of Motorcycle', 3000);
       }
@@ -132,6 +135,7 @@ angular.module('motorcycleApp')
     $scope.back = function () {
       window.history.back();
     };
+    $('input').characterCounter();
   })
   .controller('RentalViewSelectCtrl', function ($rootScope, $scope, $sce) {
     $rootScope.menu = 'rental';
@@ -322,6 +326,16 @@ angular.module('motorcycleApp')
         $route.reload();
       }
     };
+    $('#image_file').change(function (event) {
+      $scope.$apply(function () {
+        if(event.target.files[0] === undefined) {
+          delete $scope.form.image;
+        }
+        else {
+          $scope.form.image = event.target.files[0].path;
+        }
+      });
+    });
   })
   .controller('MotorcycleViewCtrl', function ($rootScope, $scope, $routeParams, $templateRequest, $compile, $route, $location) {
     $rootScope.menu = 'motorcycle';
