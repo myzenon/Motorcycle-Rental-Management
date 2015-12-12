@@ -362,6 +362,16 @@ angular.module('motorcycleApp')
         $scope.brands.unshift({ id : 0, name : ' # Create New Brand' });
         $scope.resetForm();
         $('#editMotorcycle').openModal();
+        $('#image_file').change(function (event) {
+          $scope.$apply(function () {
+            if(event.target.files[0] === undefined) {
+              delete $scope.form.image;
+            }
+            else {
+              $scope.form.image = event.target.files[0].path;
+            }
+          });
+        });
       });
     };
     $scope.deleteMotorcycle = function () {
@@ -409,6 +419,7 @@ angular.module('motorcycleApp')
     $scope.back = function () {
       window.history.back();
     };
+    $scope.getImage = checkMotorcycleImage;
   })
   .controller('RepairCtrl', function ($rootScope, $scope, $routeParams, $route) {
     $rootScope.menu = 'motorcycle';

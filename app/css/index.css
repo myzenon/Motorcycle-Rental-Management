@@ -1,6 +1,6 @@
 body {
   /*background-color: #E7E7E7;*/
-  background-color: #E9E9E9;
+  background-color: #EFEFEF;
   overflow: hidden;
 }
 header {
@@ -8,11 +8,11 @@ header {
 }
 header nav {
   padding-left: 25px;
-  background-color: #555;
+  background-color: #777;
 }
 .nav-wrapper li.active {
-  background-color: #0097A7;
-  border-bottom: 4px solid #40d6e6;
+  /*background-color: #0097A7;*/
+  border-bottom: 5px solid #82e1cd;
   color: #FFF;
 }
 .nav-wrapper li.active a {
@@ -37,7 +37,7 @@ main {
   padding: 15px;
 }
 #mysql-unconnect {
-	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.9);
+	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.8);
 	width: 100%;
 	height: 100%;
 	position: fixed;

@@ -1,4 +1,4 @@
-module.exports = function (fs, ipcMain, mysqlPool, debug) {
+module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
   ipcMain.on('add-motorcycle', function (event, data) {
     mysqlPool.getConnection(function(error, connection) {
       if(error) {
@@ -28,7 +28,6 @@ module.exports = function (fs, ipcMain, mysqlPool, debug) {
               var extension_split = data.image.split('.');
               var extension = extension_split[extension_split.length - 1];
               fs.createReadStream(data.image).pipe(fs.createWriteStream('./app/img/motorcycle/' + row[2][0]['@id'] + '.' + extension));
-              console.log('./app/img/motorcycle/' + row[2][0]['@id'] + '.' + extension);
             }
             event.sender.send('add-motorcycle-complete');
           }
@@ -63,6 +62,16 @@ module.exports = function (fs, ipcMain, mysqlPool, debug) {
             event.sender.send('mysql-error', error);
           }
           else {
+            if(data.image) {
+              var extension_split = data.image.split('.');
+              var extension = extension_split[extension_split.length - 1];
+              checkExtensionImage(data.id, function (extension_old) {
+                if(extension_old) {
+                  fs.unlinkSync('./app/img/motorcycle/' + data.id + '.' + extension_old);
+                }
+                fs.createReadStream(data.image).pipe(fs.createWriteStream('./app/img/motorcycle/' + data.id + '.' + extension));
+              });
+            }
             event.sender.send('edit-motorcycle-complete');
           }
           connection.release();
@@ -88,6 +97,11 @@ module.exports = function (fs, ipcMain, mysqlPool, debug) {
             event.returnValue = null;
           }
           else {
+            checkExtensionImage(data.id, function (extension) {
+              if(extension) {
+                fs.unlinkSync('./app/img/motorcycle/' + id + '.' + extension);
+              }
+            });
             event.returnValue = true;
           }
           connection.release();
