@@ -21,13 +21,13 @@
           <div class="col s5 right-align"><strong>Collateral : </strong></div>
           <div class="col s7">{{ rental.collateral }}</div>
         </div>
-        <div class="row" ng-show="rental.price_per_day">
+        <div class="row" ng-show="rental.type == 'day'">
           <div class="col s5 right-align"><strong>Price per Day : </strong></div>
-          <div class="col s7">{{ rental.price_per_day }}</div>
+          <div class="col s7">{{ rental.price }}</div>
         </div>
-        <div class="row" ng-show="rental.price_per_month">
+        <div class="row" ng-show="rental.type == 'month'">
           <div class="col s5 right-align"><strong>Price per Month : </strong></div>
-          <div class="col s7">{{ rental.price_per_month }}</div>
+          <div class="col s7">{{ rental.price }}</div>
         </div>
         <div class="row">
           <div class="col s5 right-align"><strong>Status : </strong></div>
@@ -45,11 +45,6 @@
           <div class="col s5 right-align"><strong>Date Returned : </strong></div>
           <div class="col s7" ng-bind-html="checkDate(rental.date_return_returned, rental.date_return_expect)"></div>
         </div>
-        <div class="row">
-          <div class="col s12 center-align">
-            <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -64,7 +59,7 @@
           </div>
           <div class="col s4 input-field">
             <label for="fine" ng-class="{ 'active' : rental.date_return_returned !== null}">Fine</label>
-            <input type="number" id="fine" ng-model="form.fine" ng-disabled="rental.date_return_returned !== null">
+            <input type="number" id="fine" min="1" ng-model="form.fine" ng-disabled="rental.date_return_returned !== null">
           </div>
           <div class="col s4 input-field right-align">
             <button class="btn waves-effect waves-light" ng-click="returnRental()" ng-hide="rental.date_return_returned !== null">RETURN</button>
@@ -108,10 +103,10 @@
               <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'day') : 'None' }}
             </div>
             <div ng-show="rental.type == 'day'">
-              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price_per_day * rental.amount : 'None' }}
+              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price * rental.amount : 'None' }}
             </div>
             <div ng-show="rental.type == 'day'">
-              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price_per_day * rental.amount : 0) + rental.collateral }}
+              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price * rental.amount : 0) + rental.collateral }}
             </div>
           </div>
           <div class="col s6">
@@ -126,10 +121,10 @@
               <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'month') : 'None' }}
             </div>
             <div ng-show="rental.type == 'month'">
-              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price_per_month * rental.amount : 'None' }}
+              <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price * rental.amount : 'None' }}
             </div>
             <div ng-show="rental.type == 'month'">
-              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price_per_month * rental.amount : 0) + rental.collateral }}
+              <strong>Total Cost : </strong> {{ (rental.amount > 0 ? rental.price * rental.amount : 0) + rental.collateral }}
             </div>
           </div>
         </div>

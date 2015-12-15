@@ -1,6 +1,17 @@
 angular.module('motorcycleApp')
-  .controller('BarCtrl', function ($rootScope) {
-
+  .controller('BarCtrl', function ($rootScope, $scope) {
+    $rootScope.$watch('menu', function () {
+      if($rootScope.menu == "rental-success") {
+        $scope.back = function () {
+          location.href="#/";
+        };
+      }
+      else {
+        $scope.back = function () {
+          window.history.back();
+        };
+      }
+    });
   })
   .controller('RentalCtrl', function ($rootScope, $scope) {
     $rootScope.menu = 'rental';
@@ -110,30 +121,30 @@ angular.module('motorcycleApp')
         Materialize.toast('Error : Please Input Amount of Days to Rent', 3000);
       }
       else if(($scope.form.type === 'day') && (parseInt($scope.form.day) != $scope.form.day)) {
-        Materialize.toast('Error : Please Input Amount of Days Only In Integer Format', 3000);
+        Materialize.toast('Error : Please Input Amount of Days Only 1 to 1000', 3000);
       }
       else if(($scope.form.type === 'month') && (($scope.form.month === null) || ($scope.form.month === '') || ($scope.form.month === 0))) {
         Materialize.toast('Error : Please Input Amount of Months to Rent', 3000);
       }
       else if(($scope.form.type === 'month') && (parseInt($scope.form.month) != $scope.form.month)) {
-        Materialize.toast('Error : Please Input Amount of Months Only In Integer Format', 3000);
+        Materialize.toast('Error : Please Input Amount of Months Only 1 to 100', 3000);
       }
       else {
         if($scope.form.type === 'day') {
           $scope.form.amount = $scope.form.day;
+          $scope.form.price = $scope.motorcycle.price_per_day;
           $scope.form.date_return_expect = $scope.getNextDate($scope.form.amount, 2, 'day');
           $scope.form.total_cost = ($scope.form.amount * $scope.motorcycle.price_per_day) + $scope.motorcycle.collateral;
         }
         else {
           $scope.form.amount = $scope.form.month;
+          $scope.form.price = $scope.motorcycle.price_per_month;
           $scope.form.date_return_expect = $scope.getNextDate($scope.form.amount, 2, 'month');
           $scope.form.total_cost = ($scope.form.amount * $scope.motorcycle.price_per_month) + $scope.motorcycle.collateral;
         }
+        $scope.form.collateral = $scope.motorcycle.collateral;
         ipcRenderer.send('add-rental', $scope.form);
       }
-    };
-    $scope.back = function () {
-      window.history.back();
     };
     $('input').characterCounter();
   })
@@ -229,9 +240,6 @@ angular.module('motorcycleApp')
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
       }
     };
-    $scope.back = function () {
-      window.history.back();
-    };
   })
   .controller('MotorcycleCtrl', function ($rootScope, $scope, $templateRequest, $compile) {
     $rootScope.menu = 'motorcycle';
@@ -282,6 +290,15 @@ angular.module('motorcycleApp')
   .controller('MotorcycleAddCtrl', function ($rootScope, $scope, $route) {
     $scope.brands = ipcRenderer.sendSync('get-brand');
     $scope.brands.unshift({ id : 0, name : ' # Create New Brand' });
+    var findBrand = function (brand) {
+      var check = false;
+      $scope.brands.forEach(function (brand_in_list) {
+        if(brand_in_list.name === brand) {
+          check = true;
+        }
+      });
+      return check;
+    };
     $scope.resetForm = function () {
       $scope.form = {
         brand : '',
@@ -301,6 +318,9 @@ angular.module('motorcycleApp')
       }
       else if(($scope.form.brand.id == 0) && ($scope.form.brand_new === '')) {
         Materialize.toast('Error : Please Input New Brand Name', 3000);
+      }
+      else if(findBrand($scope.form.brand_new)) {
+        Materialize.toast('Error : New Brand Name has already in list', 3000);
       }
       else if($scope.form.model === '') {
         Materialize.toast('Error : Please Input Model of Motorcycle', 3000);
@@ -326,22 +346,21 @@ angular.module('motorcycleApp')
         $route.reload();
       }
     };
-    $('#image_file').change(function (event) {
-      $scope.$apply(function () {
-        if(event.target.files[0] === undefined) {
-          delete $scope.form.image;
-        }
-        else {
-          $scope.form.image = event.target.files[0].path;
-        }
-      });
-    });
   })
   .controller('MotorcycleViewCtrl', function ($rootScope, $scope, $routeParams, $templateRequest, $compile, $route, $location) {
     $rootScope.menu = 'motorcycle';
     $scope.motorcycle = ipcRenderer.sendSync('get-motorcycle-view', $routeParams.id)[0];
     $scope.repairList = ipcRenderer.sendSync('get-motorcycle-repair', $scope.motorcycle.id);
     $scope.rentalList = ipcRenderer.sendSync('get-motorcycle-rental', $scope.motorcycle.id);
+    var findBrand = function (brand) {
+      var check = false;
+      $scope.brands.forEach(function (brand_in_list) {
+        if(brand_in_list.name === brand) {
+          check = true;
+        }
+      });
+      return check;
+    };
     $scope.resetForm = function () {
       $scope.form = {
         id : $scope.motorcycle.id,
@@ -362,22 +381,14 @@ angular.module('motorcycleApp')
         $scope.brands.unshift({ id : 0, name : ' # Create New Brand' });
         $scope.resetForm();
         $('#editMotorcycle').openModal();
-        $('#image_file').change(function (event) {
-          $scope.$apply(function () {
-            if(event.target.files[0] === undefined) {
-              delete $scope.form.image;
-            }
-            else {
-              $scope.form.image = event.target.files[0].path;
-            }
-          });
-        });
       });
     };
     $scope.deleteMotorcycle = function () {
-      var result = ipcRenderer.sendSync('delete-motorcycle', $scope.motorcycle.id);
-      if(result) {
-        $location.path('/motorcycle');
+      if(confirm("Are you sure to delete this mortocycle ?")) {
+        var result = ipcRenderer.sendSync('delete-motorcycle', $scope.motorcycle.id);
+        if(result) {
+          $location.path('/motorcycle');
+        }
       }
     };
     $scope.editForm = function () {
@@ -386,6 +397,9 @@ angular.module('motorcycleApp')
       }
       else if(($scope.form.brand.id == 0) && ($scope.form.brand_new === '')) {
         Materialize.toast('Error : Please Input New Brand Name', 3000);
+      }
+      else if(findBrand($scope.form.brand_new)) {
+        Materialize.toast('Error : New Brand Name has already in list', 3000);
       }
       else if($scope.form.model === '') {
         Materialize.toast('Error : Please Input Model of Motorcycle', 3000);
@@ -416,10 +430,6 @@ angular.module('motorcycleApp')
       var date_return_expect = new Date(date);
       return date_return_expect.getDate() + ' ' + monthName[date_return_expect.getMonth()] + ' ' + date_return_expect.getFullYear();
     };
-    $scope.back = function () {
-      window.history.back();
-    };
-    $scope.getImage = checkMotorcycleImage;
   })
   .controller('RepairCtrl', function ($rootScope, $scope, $routeParams, $route) {
     $rootScope.menu = 'motorcycle';
@@ -436,7 +446,6 @@ angular.module('motorcycleApp')
       }
       else {
         ipcRenderer.send('update-repair', $scope.form);
-        $route.reload();
       }
     };
     $scope.receiveMotorcycle = function () {
@@ -451,19 +460,15 @@ angular.module('motorcycleApp')
       }
       else {
         ipcRenderer.send('update-repair', $scope.form);
-        $route.reload();
       }
-    };
-    $scope.back = function () {
-      window.history.back();
     };
   })
   .controller('RentalAddSuccessCtrl', function ($rootScope, $scope, $routeParams) {
-    $rootScope.menu = 'rental';
+    $rootScope.menu = 'rental-success';
     $scope.amount = $routeParams.amount;
   })
   .controller('RentalReturnSuccessCtrl', function ($rootScope, $scope, $routeParams) {
-    $rootScope.menu = 'rental';
+    $rootScope.menu = 'rental-success';
     $scope.amount = $routeParams.amount < 0 ? $routeParams.amount * -1 : $routeParams.amount;
     if($routeParams.amount > 0) {
       $scope.message = 'You have to refund customer money';

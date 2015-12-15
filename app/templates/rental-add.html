@@ -33,11 +33,6 @@
           <div class="col s5 right-align"><strong>Status : </strong></div>
           <div class="col s7">{{ motorcycle.status | Status }}</div>
         </div>
-        <div class="row">
-          <div class="col s12 center-align">
-              <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -72,7 +67,7 @@
               <label for="rentDay">Rent by Days</label>
             </div>
             <div class="input-field" ng-show="form.type == 'day'">
-              <input type="number" class="center-align" ng-model="form.day" ng-disabled="form.type != 'day'">
+              <input type="number" max="1000" min="1" class="center-align" ng-model="form.day" ng-disabled="form.type != 'day'">
             </div>
             <div ng-show="form.type == 'day'">
               <strong>Return Date : </strong>{{ form.day > 0 ? getNextDate(form.day, 1, 'day') : 'None' }}
@@ -90,7 +85,7 @@
               <label for="rentMonth">Rent by Months</label>
             </div>
             <div class="input-field" ng-show="form.type == 'month'">
-              <input type="number" class="center-align" ng-model="form.month" ng-disabled="form.type != 'month'">
+              <input type="number" max="100" min="1" class="center-align" ng-model="form.month" ng-disabled="form.type != 'month'">
             </div>
             <div ng-show="form.type == 'month'">
               <strong>Return Date : </strong>{{ form.month > 0 ? getNextDate(form.month, 1, 'month') : 'None' }}

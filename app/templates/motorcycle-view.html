@@ -1,8 +1,15 @@
 <div class="row">
   <div class="col s4">
     <div class="card">
-      <div class="card-image block-image" ng-style="getImage(motorcycle.id)">
-          <span class="card-title">{{ motorcycle.brand_name }} {{ motorcycle.model }}</span>
+      <div class="card-image block-image">
+        <div class="image-button">
+          <div class="col s6 right-align">
+            <button ng-click="editMotorcycle()" class="btn white waves-effect waves-green" style="color: #000;">EDIT</button>
+          </div>
+          <div class="col s6 left-align">
+            <button ng-click="deleteMotorcycle()" class="btn white waves-effect waves-red" style="color: #000;">DELETE</button>
+          </div>
+        </div>
       </div>
       <div class="card-content">
         <div class="row">
@@ -35,18 +42,7 @@
         </div>
         <div class="row">
           <div class="col s5 right-align"><strong>Status : </strong></div>
-          <div class="col s7">{{ motorcycle.status | Status }}</div>
-        </div>
-        <div class="row">
-          <div class="col s12 center-align" style="margin-bottom : 10px;">
-            <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
-          </div>
-          <div class="col s12 center-align" style="margin-bottom : 10px;">
-            <button ng-click="editMotorcycle()" class="btn white waves-effect waves-green" style="color: #000;">EDIT</button>
-          </div>
-          <div class="col s12 center-align" style="margin-bottom : 10px;">
-            <button ng-click="deleteMotorcycle()" class="btn white waves-effect waves-red" style="color: #000;">DELETE</button>
-          </div>
+          <div class="col s7">{{ motorcycle. status | Status }}</div>
         </div>
       </div>
     </div>
@@ -68,7 +64,7 @@
      </div>
      <div class="collection" ng-hide="rentalList.length === 0">
        <a ng-href="#/rent/{{ rental.id }}" class="collection-item" ng-repeat="rental in rentalList">
-          {{ rental.fistname + ' ' + rental.lastname }}&nbsp;&nbsp;<small>({{ showDate(rental.date_rent) }})</small>
+          {{ rental.firstname + ' ' + rental.lastname }}&nbsp;&nbsp;<small>({{ showDate(rental.date_rent) }})</small>
           <span class="badge">{{ rental.date_return_returned === null ? 'Rented' : showDate(rental.date_return_returned) }}</span>
        </a>
      </div>

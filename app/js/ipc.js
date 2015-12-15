@@ -31,4 +31,5 @@ ipcRenderer.on('edit-motorcycle-complete', function () {
 
 ipcRenderer.on('update-repair-complete', function () {
   Materialize.toast('Update Repair Status Complete !!', 4000);
+  location.href="#/motorcycle";
 });

@@ -6,7 +6,7 @@ module.exports = function (ipcMain, mysqlPool, debug) {
         return;
       }
       else {
-        var query_command = 'CALL insert_rental (@motorcycle_id, "@firstname", "@lastname", "@cznum", "@dlnum", "@phone", "@type", @amount, "@date_return_expect")'
+        var query_command = 'CALL insert_rental (@motorcycle_id, "@firstname", "@lastname", "@cznum", "@dlnum", "@phone", "@type", @amount, @price, @collateral, "@date_return_expect")'
           .replace('@motorcycle_id', data.motorcycle_id)
           .replace('@firstname', data.firstname)
           .replace('@lastname', data.lastname)
@@ -15,6 +15,8 @@ module.exports = function (ipcMain, mysqlPool, debug) {
           .replace('@phone', data.phone)
           .replace('@type', data.type)
           .replace('@amount', data.amount)
+          .replace('@price', data.price)
+          .replace('@collateral', data.collateral)
           .replace('@date_return_expect', data.date_return_expect)
         ;
         if(debug) {

@@ -12,28 +12,19 @@
       </div>
       <div class="col s3 input-field">
         <label for="cost">Cost (Investment)</label>
-        <input type="number" id="cost" ng-model="form.cost">
+        <input type="number" min="1" id="cost" ng-model="form.cost">
       </div>
       <div class="col s3 input-field">
         <label for="collateral">Collateral (Price)</label>
-        <input type="number" id="collateral" ng-model="form.collateral">
+        <input type="number" min="1" id="collateral" ng-model="form.collateral">
       </div>
       <div class="col s3 input-field">
         <label for="ppd">Rental Price per Day</label>
-        <input type="number" id="ppd" ng-model="form.price_per_day">
+        <input type="number" min="1" id="ppd" ng-model="form.price_per_day">
       </div>
       <div class="col s3 input-field">
         <label for="ppm">Rental Price per Month</label>
-        <input type="number" id="ppm" ng-model="form.price_per_month">
-      </div>
-      <div class="col s12 file-field input-field">
-        <div class="btn">
-          <span>Image</span>
-          <input type="file" accept="image/*" id="image_file">
-        </div>
-        <div class="file-path-wrapper">
-          <input class="file-path validate" type="text">
-        </div>
+        <input type="number" min="1" id="ppm" ng-model="form.price_per_month">
       </div>
       <div class="col s4 input-field">
         <select class="browser-default" ng-model="form.brand" ng-options="brand as brand.name for brand in brands track by brand.id">
@@ -51,7 +42,6 @@
       </div>
     </div>
   </div>
-
   <div class="modal-footer">
     <button ng-click="addForm()" class="waves-effect waves-green btn-flat">ADD</button>
     <button ng-click="resetForm()" class="waves-effect waves-green btn-flat">RESET</button>

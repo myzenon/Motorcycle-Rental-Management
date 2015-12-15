@@ -1,4 +1,4 @@
-module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
+module.exports = function (ipcMain, mysqlPool, debug) {
   ipcMain.on('add-motorcycle', function (event, data) {
     mysqlPool.getConnection(function(error, connection) {
       if(error) {
@@ -6,7 +6,7 @@ module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
         return;
       }
       else {
-        var query_command = 'SET @id = null; CALL insert_motorcycle(@brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month, @id); SELECT @id;'
+        var query_command = 'CALL insert_motorcycle(@brand_id, "@brand_new", "@model", "@plate_number", @cost, @collateral, @price_per_day, @price_per_month);'
           .replace('@brand_id', data.brand.id)
           .replace('@brand_new', data.brand_new)
           .replace('@model', data.model)
@@ -24,11 +24,6 @@ module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
             event.sender.send('mysql-error', error);
           }
           else {
-            if(data.image) {
-              var extension_split = data.image.split('.');
-              var extension = extension_split[extension_split.length - 1];
-              fs.createReadStream(data.image).pipe(fs.createWriteStream('./app/img/motorcycle/' + row[2][0]['@id'] + '.' + extension));
-            }
             event.sender.send('add-motorcycle-complete');
           }
           connection.release();
@@ -62,16 +57,6 @@ module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
             event.sender.send('mysql-error', error);
           }
           else {
-            if(data.image) {
-              var extension_split = data.image.split('.');
-              var extension = extension_split[extension_split.length - 1];
-              checkExtensionImage(data.id, function (extension_old) {
-                if(extension_old) {
-                  fs.unlinkSync('./app/img/motorcycle/' + data.id + '.' + extension_old);
-                }
-                fs.createReadStream(data.image).pipe(fs.createWriteStream('./app/img/motorcycle/' + data.id + '.' + extension));
-              });
-            }
             event.sender.send('edit-motorcycle-complete');
           }
           connection.release();
@@ -97,11 +82,6 @@ module.exports = function (fs, checkExtensionImage, ipcMain, mysqlPool, debug) {
             event.returnValue = null;
           }
           else {
-            checkExtensionImage(data.id, function (extension) {
-              if(extension) {
-                fs.unlinkSync('./app/img/motorcycle/' + id + '.' + extension);
-              }
-            });
             event.returnValue = true;
           }
           connection.release();

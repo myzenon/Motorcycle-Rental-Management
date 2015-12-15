@@ -29,11 +29,6 @@
           <div class="col s5 right-align"><strong>Date Returned : </strong></div>
           <div class="col s7">{{ repair.date_return }}</div>
         </div>
-        <div class="row">
-          <div class="col s12 center-align">
-              <button ng-click="back()" class="btn white waves-effect waves-green" style="color: #000;">BACK</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -58,7 +53,7 @@
         <div class="row">
           <div class="col s12 input-field">
             <label for="cost" ng-class="{ 'active' : repair.cost }">Cost</label>
-            <input type="number" id="cost" ng-model="form.cost" ng-disabled="repair.status !== 'wrepair'">
+            <input type="number" id="cost" min="1" ng-model="form.cost" ng-disabled="repair.status !== 'wrepair'">
           </div>
           <div class="col s12 input-field">
             <label for="cause" ng-class="{ 'active' : repair.cause }">Cause</label>

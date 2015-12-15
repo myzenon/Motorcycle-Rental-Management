@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.14
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Dec 07, 2015 at 09:47 AM
--- Server version: 5.6.26
--- PHP Version: 5.6.12
+-- Host: 127.0.0.1
+-- Generation Time: Dec 15, 2015 at 05:12 AM
+-- Server version: 10.1.9-MariaDB
+-- PHP Version: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `motorcycle-rental`
 --
-CREATE DATABASE IF NOT EXISTS `motorcycle-rental` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `motorcycle-rental` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `motorcycle-rental`;
 
 DELIMITER $$
@@ -27,8 +27,7 @@ DELIMITER $$
 -- Procedures
 --
 DROP PROCEDURE IF EXISTS `delete_motorcycle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_motorcycle`(IN `id` INT)
-    MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `delete_motorcycle` (IN `id` INT)  MODIFIES SQL DATA
 BEGIN
 	DECLARE brand_id INT;
 	DECLARE amount INT;
@@ -43,8 +42,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `edit_motorcycle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `edit_motorcycle`(IN `id` INT, IN `brand_id` INT, IN `brand_new` VARCHAR(100) CHARSET utf8, IN `model` VARCHAR(100) CHARSET utf8, IN `plate_number` VARCHAR(100) CHARSET utf8, IN `cost` INT, IN `collateral` INT, IN `ppd` INT, IN `ppm` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `edit_motorcycle` (IN `id` INT, IN `brand_id` INT, IN `brand_new` VARCHAR(100) CHARSET utf8, IN `model` VARCHAR(100) CHARSET utf8, IN `plate_number` VARCHAR(100) CHARSET utf8, IN `cost` INT, IN `collateral` INT, IN `ppd` INT, IN `ppm` INT)  BEGIN
     IF brand_id = 0 THEN
 		INSERT INTO brand (brand.name) VALUES (brand_new);
         SELECT brand.id INTO brand_id FROM brand ORDER BY brand.id DESC LIMIT 1;
@@ -53,8 +51,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `insert_motorcycle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_motorcycle`(IN `brand_id` INT, IN `brand_new` VARCHAR(100) CHARSET utf8, IN `model` VARCHAR(100) CHARSET utf8, IN `plate_number` VARCHAR(100) CHARSET utf8, IN `cost` INT, IN `collateral` INT, IN `ppd` INT, IN `ppm` INT)
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_motorcycle` (IN `brand_id` INT, IN `brand_new` VARCHAR(100) CHARSET utf8, IN `model` VARCHAR(100) CHARSET utf8, IN `plate_number` VARCHAR(100) CHARSET utf8, IN `cost` INT, IN `collateral` INT, IN `ppd` INT, IN `ppm` INT)  BEGIN
     IF brand_id = 0 THEN
 		INSERT INTO brand (name) VALUES (brand_new);
         SELECT brand.id INTO brand_id FROM brand ORDER BY brand.id DESC LIMIT 1;
@@ -63,15 +60,13 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `insert_rental`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_rental`(IN `motorcycle_id` INT, IN `firstname` VARCHAR(150) CHARSET utf8, IN `lastname` VARCHAR(150) CHARSET utf8, IN `cznum` VARCHAR(100) CHARSET utf8, IN `dlnum` VARCHAR(100) CHARSET utf8, IN `phone` VARCHAR(15) CHARSET utf8, IN `type` ENUM('day','month'), IN `amount` INT, IN `dre` DATE)
-BEGIN
-INSERT INTO rental (rental.motorcycle_id, rental.firstname, rental.lastname, rental.cznum, rental.dlnum, rental.phone, rental.type, rental.amount, rental.date_rent, rental.date_return_expect) VALUES (motorcycle_id, firstname, lastname, cznum, dlnum, phone, type, amount, NOW(), dre);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_rental` (IN `motorcycle_id` INT, IN `firstname` VARCHAR(150) CHARSET utf8, IN `lastname` VARCHAR(150) CHARSET utf8, IN `cznum` VARCHAR(100) CHARSET utf8, IN `dlnum` VARCHAR(100) CHARSET utf8, IN `phone` VARCHAR(15) CHARSET utf8, IN `type` ENUM('day','month') CHARSET utf8, IN `amount` INT, IN `price` INT, IN `collateral` INT, IN `dre` DATE)  BEGIN
+INSERT INTO rental (rental.motorcycle_id, rental.firstname, rental.lastname, rental.cznum, rental.dlnum, rental.phone, rental.type, rental.amount, rental.price, rental.collateral, rental.date_rent, rental.date_return_expect) VALUES (motorcycle_id, firstname, lastname, cznum, dlnum, phone, type, amount, price, collateral, NOW(), dre);
 UPDATE motorcycle SET motorcycle.status = "rented" WHERE motorcycle.id = motorcycle_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `return_rental`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `return_rental`(IN `id` INT, IN `nrepair` BOOLEAN, IN `fine` INT)
-    MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `return_rental` (IN `id` INT, IN `nrepair` BOOLEAN, IN `fine` INT)  MODIFIES SQL DATA
 BEGIN
 	DECLARE motorcycle_id INT;
 	UPDATE rental SET rental.nrepair = nrepair, rental.fine = fine, rental.date_return_returned = NOW() WHERE rental.id = id;
@@ -85,8 +80,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `update_repair`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_repair`(IN `id` INT, IN `problem` TEXT CHARSET utf8, IN `cause` TEXT CHARSET utf8, IN `cost` INT)
-    MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_repair` (IN `id` INT, IN `problem` TEXT CHARSET utf8, IN `cause` TEXT CHARSET utf8, IN `cost` INT)  MODIFIES SQL DATA
 BEGIN
     DECLARE motorcycle_id INT;
     IF (cause IS NULL) = 1 AND (cost IS NULL) = 1 THEN
@@ -109,26 +103,10 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `brand`;
-CREATE TABLE IF NOT EXISTS `brand` (
+CREATE TABLE `brand` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `brand`
---
-
-INSERT INTO `brand` (`id`, `name`) VALUES
-(2, 'Test'),
-(3, 'Suzuki'),
-(4, 'YUO'),
-(5, 'NewR'),
-(7, 'Zenon'),
-(8, 'BBBBB3'),
-(9, 'Luffy'),
-(10, 'Puffy'),
-(11, 'Tu'),
-(12, '77878');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -137,7 +115,7 @@ INSERT INTO `brand` (`id`, `name`) VALUES
 --
 
 DROP TABLE IF EXISTS `motorcycle`;
-CREATE TABLE IF NOT EXISTS `motorcycle` (
+CREATE TABLE `motorcycle` (
   `id` int(11) NOT NULL,
   `brand_id` int(11) NOT NULL,
   `model` varchar(100) NOT NULL,
@@ -147,19 +125,7 @@ CREATE TABLE IF NOT EXISTS `motorcycle` (
   `price_per_day` int(11) DEFAULT NULL,
   `price_per_month` int(11) DEFAULT NULL,
   `status` enum('avaliable','rented','nrepair','wrepair') NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `motorcycle`
---
-
-INSERT INTO `motorcycle` (`id`, `brand_id`, `model`, `plate_number`, `cost`, `collateral`, `price_per_day`, `price_per_month`, `status`) VALUES
-(28, 28, 'FX 1', '0 กง', 34534, 3453454, NULL, 345345, 'avaliable'),
-(29, 4, '34534', '345345', 43534, 34534, NULL, NULL, 'avaliable'),
-(31, 2, '435345', '545345', 4534, 4345345, NULL, NULL, 'avaliable'),
-(36, 7, '322', '345345', 34, 54345, 10, 200, 'rented'),
-(40, 5, '345345', '345345345', 45345345, 34534534, 45345, 5345345, 'rented'),
-(41, 2, '435345', '4545', 45345, 4534534, 5435345, NULL, 'rented');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -167,7 +133,7 @@ INSERT INTO `motorcycle` (`id`, `brand_id`, `model`, `plate_number`, `cost`, `co
 -- Stand-in structure for view `motorcycle_list`
 --
 DROP VIEW IF EXISTS `motorcycle_list`;
-CREATE TABLE IF NOT EXISTS `motorcycle_list` (
+CREATE TABLE `motorcycle_list` (
 `id` int(11)
 ,`brand_name` varchar(100)
 ,`model` varchar(100)
@@ -181,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `motorcycle_list` (
 -- Stand-in structure for view `motorcycle_view`
 --
 DROP VIEW IF EXISTS `motorcycle_view`;
-CREATE TABLE IF NOT EXISTS `motorcycle_view` (
+CREATE TABLE `motorcycle_view` (
 `id` int(11)
 ,`brand_id` int(11)
 ,`brand_name` varchar(100)
@@ -201,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `motorcycle_view` (
 --
 
 DROP TABLE IF EXISTS `rental`;
-CREATE TABLE IF NOT EXISTS `rental` (
+CREATE TABLE `rental` (
   `id` int(11) NOT NULL,
   `motorcycle_id` int(11) NOT NULL,
   `firstname` varchar(150) NOT NULL,
@@ -211,28 +177,14 @@ CREATE TABLE IF NOT EXISTS `rental` (
   `phone` varchar(15) NOT NULL,
   `type` enum('day','month') NOT NULL,
   `amount` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
+  `collateral` int(11) NOT NULL,
   `date_rent` date NOT NULL,
   `date_return_expect` date NOT NULL,
   `date_return_returned` date DEFAULT NULL,
   `nrepair` tinyint(1) NOT NULL,
   `fine` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `rental`
---
-
-INSERT INTO `rental` (`id`, `motorcycle_id`, `firstname`, `lastname`, `cznum`, `dlnum`, `phone`, `type`, `amount`, `date_rent`, `date_return_expect`, `date_return_returned`, `nrepair`, `fine`) VALUES
-(1, 41, 'Test', 'Last', '43534534534534534', '345345345345', '1246', 'day', 3, '2015-12-01', '2015-12-04', '2015-12-07', 0, 1000),
-(2, 41, '435345', '324234', 'dr423', '534534534', '01057', 'day', 31, '2015-12-06', '2015-12-07', '2015-12-07', 0, 1200),
-(3, 41, 'erewr', 'ewrewr', '543534', '24', '23423', 'day', 3, '2015-12-07', '2015-11-25', '2015-12-07', 0, 1000),
-(4, 41, 'Name', 'Last', '777877787', '2578643489', '1121', 'day', 10, '2015-12-07', '2015-12-08', '2015-12-07', 0, 1000),
-(5, 41, '35345', '435345', '435345', '345345', '435345', 'day', 32, '2015-11-27', '2015-12-02', '2015-12-07', 0, 100),
-(7, 41, '353454', '5345345', '4534534', '53453453', '4564564565', 'day', 3, '2015-12-07', '2015-12-10', '2015-12-07', 0, 1000000000),
-(8, 41, '345', '654645', '5645', '5345', '4564564', 'day', 3, '2015-12-07', '2015-12-10', '2015-12-07', 0, 4534534),
-(9, 41, '453', '5345345', '43534', '435', '435', 'day', 1, '2015-12-07', '2015-12-08', '2015-12-07', 0, NULL),
-(10, 41, '34534', '345345', '345345', '345345', '345345345', 'day', 23, '2015-12-07', '2015-12-30', NULL, 0, NULL),
-(11, 36, '34534', '345345', '345345', '43534', '345', 'month', 1, '2015-12-07', '2016-01-07', NULL, 0, NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -240,7 +192,7 @@ INSERT INTO `rental` (`id`, `motorcycle_id`, `firstname`, `lastname`, `cznum`, `
 -- Stand-in structure for view `rental_list`
 --
 DROP VIEW IF EXISTS `rental_list`;
-CREATE TABLE IF NOT EXISTS `rental_list` (
+CREATE TABLE `rental_list` (
 `id` int(11)
 ,`motorcycle_id` int(11)
 ,`brand_name` varchar(100)
@@ -260,14 +212,11 @@ CREATE TABLE IF NOT EXISTS `rental_list` (
 -- Stand-in structure for view `rental_view`
 --
 DROP VIEW IF EXISTS `rental_view`;
-CREATE TABLE IF NOT EXISTS `rental_view` (
+CREATE TABLE `rental_view` (
 `id` int(11)
 ,`brand_name` varchar(100)
 ,`model` varchar(100)
 ,`plate_number` varchar(100)
-,`collateral` int(11)
-,`price_per_day` int(11)
-,`price_per_month` int(11)
 ,`status` enum('avaliable','rented','nrepair','wrepair')
 ,`firstname` varchar(150)
 ,`lastname` varchar(150)
@@ -276,6 +225,8 @@ CREATE TABLE IF NOT EXISTS `rental_view` (
 ,`phone` varchar(15)
 ,`type` enum('day','month')
 ,`amount` int(11)
+,`price` int(11)
+,`collateral` int(11)
 ,`date_rent` date
 ,`date_return_expect` date
 ,`date_return_returned` date
@@ -290,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `rental_view` (
 --
 
 DROP TABLE IF EXISTS `repair`;
-CREATE TABLE IF NOT EXISTS `repair` (
+CREATE TABLE `repair` (
   `id` int(11) NOT NULL,
   `motorcycle_id` int(11) NOT NULL,
   `problem` text,
@@ -298,14 +249,7 @@ CREATE TABLE IF NOT EXISTS `repair` (
   `cost` int(11) DEFAULT NULL,
   `date_send` date DEFAULT NULL,
   `date_return` date DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `repair`
---
-
-INSERT INTO `repair` (`id`, `motorcycle_id`, `problem`, `cause`, `cost`, `date_send`, `date_return`) VALUES
-(1, 36, '45345', '5345345', 34534, '2015-12-06', '2015-12-06');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -313,7 +257,7 @@ INSERT INTO `repair` (`id`, `motorcycle_id`, `problem`, `cause`, `cost`, `date_s
 -- Stand-in structure for view `repair_view`
 --
 DROP VIEW IF EXISTS `repair_view`;
-CREATE TABLE IF NOT EXISTS `repair_view` (
+CREATE TABLE `repair_view` (
 `id` int(11)
 ,`motorcycle_id` int(11)
 ,`brand_name` varchar(100)
@@ -334,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `repair_view` (
 --
 DROP TABLE IF EXISTS `motorcycle_list`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `motorcycle_list` AS select `motorcycle`.`id` AS `id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status` from (`motorcycle` join `brand`) where (`motorcycle`.`brand_id` = `brand`.`id`) order by `brand`.`id`,`motorcycle`.`id` desc;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `motorcycle_list`  AS  select `motorcycle`.`id` AS `id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status` from (`motorcycle` join `brand`) where (`motorcycle`.`brand_id` = `brand`.`id`) order by `brand`.`id`,`motorcycle`.`id` desc ;
 
 -- --------------------------------------------------------
 
@@ -343,7 +287,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `motorcycle_view`;
 
-CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `motorcycle_view` AS select `motorcycle`.`id` AS `id`,`motorcycle`.`brand_id` AS `brand_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`cost` AS `cost`,`motorcycle`.`collateral` AS `collateral`,`motorcycle`.`price_per_day` AS `price_per_day`,`motorcycle`.`price_per_month` AS `price_per_month`,`motorcycle`.`status` AS `status` from (`brand` join `motorcycle`) where (`brand`.`id` = `motorcycle`.`brand_id`);
+CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `motorcycle_view`  AS  select `motorcycle`.`id` AS `id`,`motorcycle`.`brand_id` AS `brand_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`cost` AS `cost`,`motorcycle`.`collateral` AS `collateral`,`motorcycle`.`price_per_day` AS `price_per_day`,`motorcycle`.`price_per_month` AS `price_per_month`,`motorcycle`.`status` AS `status` from (`brand` join `motorcycle`) where (`brand`.`id` = `motorcycle`.`brand_id`) ;
 
 -- --------------------------------------------------------
 
@@ -352,7 +296,7 @@ CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `mot
 --
 DROP TABLE IF EXISTS `rental_list`;
 
-CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rental_list` AS select `rental`.`id` AS `id`,`motorcycle`.`id` AS `motorcycle_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status`,`rental`.`firstname` AS `firstname`,`rental`.`lastname` AS `lastname`,`rental`.`date_rent` AS `date_rent`,`rental`.`date_return_expect` AS `date_return_expect`,`rental`.`date_return_returned` AS `date_return_returned` from ((`rental` join `motorcycle`) join `brand`) where ((`rental`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`)) order by `rental`.`date_rent` desc,`rental`.`id` desc;
+CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rental_list`  AS  select `rental`.`id` AS `id`,`motorcycle`.`id` AS `motorcycle_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status`,`rental`.`firstname` AS `firstname`,`rental`.`lastname` AS `lastname`,`rental`.`date_rent` AS `date_rent`,`rental`.`date_return_expect` AS `date_return_expect`,`rental`.`date_return_returned` AS `date_return_returned` from ((`rental` join `motorcycle`) join `brand`) where ((`rental`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`)) order by `rental`.`date_rent` desc,`rental`.`id` desc ;
 
 -- --------------------------------------------------------
 
@@ -361,7 +305,7 @@ CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ren
 --
 DROP TABLE IF EXISTS `rental_view`;
 
-CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rental_view` AS select `rental`.`id` AS `id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`collateral` AS `collateral`,`motorcycle`.`price_per_day` AS `price_per_day`,`motorcycle`.`price_per_month` AS `price_per_month`,`motorcycle`.`status` AS `status`,`rental`.`firstname` AS `firstname`,`rental`.`lastname` AS `lastname`,`rental`.`cznum` AS `cznum`,`rental`.`dlnum` AS `dlnum`,`rental`.`phone` AS `phone`,`rental`.`type` AS `type`,`rental`.`amount` AS `amount`,`rental`.`date_rent` AS `date_rent`,`rental`.`date_return_expect` AS `date_return_expect`,`rental`.`date_return_returned` AS `date_return_returned`,`rental`.`nrepair` AS `nrepair`,`rental`.`fine` AS `fine` from ((`rental` join `motorcycle`) join `brand`) where ((`rental`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`));
+CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `rental_view`  AS  select `rental`.`id` AS `id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status`,`rental`.`firstname` AS `firstname`,`rental`.`lastname` AS `lastname`,`rental`.`cznum` AS `cznum`,`rental`.`dlnum` AS `dlnum`,`rental`.`phone` AS `phone`,`rental`.`type` AS `type`,`rental`.`amount` AS `amount`,`rental`.`price` AS `price`,`rental`.`collateral` AS `collateral`,`rental`.`date_rent` AS `date_rent`,`rental`.`date_return_expect` AS `date_return_expect`,`rental`.`date_return_returned` AS `date_return_returned`,`rental`.`nrepair` AS `nrepair`,`rental`.`fine` AS `fine` from ((`rental` join `motorcycle`) join `brand`) where ((`rental`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`)) ;
 
 -- --------------------------------------------------------
 
@@ -370,7 +314,7 @@ CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `ren
 --
 DROP TABLE IF EXISTS `repair_view`;
 
-CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `repair_view` AS select `repair`.`id` AS `id`,`motorcycle`.`id` AS `motorcycle_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status`,`repair`.`problem` AS `problem`,`repair`.`cause` AS `cause`,`repair`.`cost` AS `cost`,date_format(`repair`.`date_send`,'%d %M %Y') AS `date_send`,date_format(`repair`.`date_return`,'%d %M %Y') AS `date_return` from ((`repair` join `motorcycle`) join `brand`) where ((`repair`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`));
+CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `repair_view`  AS  select `repair`.`id` AS `id`,`motorcycle`.`id` AS `motorcycle_id`,`brand`.`name` AS `brand_name`,`motorcycle`.`model` AS `model`,`motorcycle`.`plate_number` AS `plate_number`,`motorcycle`.`status` AS `status`,`repair`.`problem` AS `problem`,`repair`.`cause` AS `cause`,`repair`.`cost` AS `cost`,date_format(`repair`.`date_send`,'%d %M %Y') AS `date_send`,date_format(`repair`.`date_return`,'%d %M %Y') AS `date_return` from ((`repair` join `motorcycle`) join `brand`) where ((`repair`.`motorcycle_id` = `motorcycle`.`id`) and (`motorcycle`.`brand_id` = `brand`.`id`)) ;
 
 --
 -- Indexes for dumped tables
@@ -386,19 +330,22 @@ ALTER TABLE `brand`
 -- Indexes for table `motorcycle`
 --
 ALTER TABLE `motorcycle`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `brand_id` (`brand_id`);
 
 --
 -- Indexes for table `rental`
 --
 ALTER TABLE `rental`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `motorcycle_id` (`motorcycle_id`);
 
 --
 -- Indexes for table `repair`
 --
 ALTER TABLE `repair`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `motorcycle_id` (`motorcycle_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -408,22 +355,22 @@ ALTER TABLE `repair`
 -- AUTO_INCREMENT for table `brand`
 --
 ALTER TABLE `brand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `motorcycle`
 --
 ALTER TABLE `motorcycle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `rental`
 --
 ALTER TABLE `rental`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `repair`
 --
 ALTER TABLE `repair`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

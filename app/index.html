@@ -22,7 +22,8 @@
     <nav>
       <div class="nav-wrapper">
         <ul>
-          <li ng-class="{ 'active' : menu == 'rental' }"><a href="#/rental"><i class="material-icons left">directions_bike</i>Rental</a></li>
+          <li><a href="javascript:void()" ng-click="back()"><i class="material-icons">keyboard_arrow_left</i></a></li>
+          <li ng-class="{ 'active' : menu == 'rental' || menu == 'rental-success' }"><a href="#/rental"><i class="material-icons left">directions_bike</i>Rental</a></li>
           <li ng-class="{ 'active' : menu == 'motorcycle' }"><a href="#/motorcycle"><i class="material-icons left">motorcycle</i>Motorcycle</a></li>
         </ul>
         <ul class="right">

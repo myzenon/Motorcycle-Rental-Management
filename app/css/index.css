@@ -1,5 +1,4 @@
 body {
-  /*background-color: #E7E7E7;*/
   background-color: #EFEFEF;
   overflow: hidden;
 }
@@ -7,11 +6,10 @@ header {
   z-index: 1;
 }
 header nav {
-  padding-left: 25px;
-  background-color: #777;
+  background-color: #FFF;
 }
 .nav-wrapper li.active {
-  /*background-color: #0097A7;*/
+  background-color: #0097A7;
   border-bottom: 5px solid #82e1cd;
   color: #FFF;
 }
@@ -27,7 +25,7 @@ header a {
 }
 header nav ul a {
   font-size: 1.15rem;
-  color: #DDD;
+  color: #BBB;
 }
 main {
   z-index: 0;

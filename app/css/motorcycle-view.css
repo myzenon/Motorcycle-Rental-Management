@@ -1,7 +1,13 @@
 div.block-image {
+  background-image : url('../img/moto.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  height: 320px;
+  height: 350px;
   box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+}
+div.image-button {
+  position: absolute;
+  bottom: 5%;
+  left : 3%;
 }
