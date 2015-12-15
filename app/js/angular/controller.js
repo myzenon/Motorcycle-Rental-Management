@@ -224,8 +224,8 @@ angular.module('motorcycleApp')
         return $sce.trustAsHtml(date_return_returned.getDate() + ' ' + monthName[date_return_returned.getMonth()] + ' ' + date_return_returned.getFullYear());
       }
     };
-    $scope.getNextDate = function (amount, type, mode) {
-      var date = new Date();
+    $scope.getNextDate = function (start, amount, type, mode) {
+      var date = new Date(start);
       if(mode === 'day') {
         date.setDate(date.getDate() + amount);
       }
@@ -299,6 +299,18 @@ angular.module('motorcycleApp')
       });
       return check;
     };
+    var checkExist = function (value) {
+      if(value === null) {
+        return false;
+      }
+      else if(value === '') {
+        return false;
+      }
+      else if(value === undefined) {
+        return false;
+      }
+      return true;
+    };
     $scope.resetForm = function () {
       $scope.form = {
         brand : '',
@@ -328,19 +340,34 @@ angular.module('motorcycleApp')
       else if($scope.form.plate_number === '') {
         Materialize.toast('Error : Please Input Plate Number of Motorcycle', 3000);
       }
-      else if(($scope.form.cost == null) || ($scope.form.cost === '')) {
-        Materialize.toast('Error : Please Input Cost of Motorcycle', 3000);
-      }
-      else if(($scope.form.collateral == null) || ($scope.form.collateral === '')) {
-        Materialize.toast('Error : Please Input Collateral', 3000);
-      }
-      else if((($scope.form.price_per_day == null) || ($scope.form.price_per_day === '')) && (($scope.form.price_per_month == null) || ($scope.form.price_per_month === ''))) {
-        Materialize.toast('Error : Please Input Price per Day or Month or Both', 3000);
+      else if(!checkExist($scope.form.cost)) {
+        Materialize.toast('Error : Please Input Cost In Positive Integer Format', 3000);
       }
       else if(parseInt($scope.form.cost) != $scope.form.cost) {
-        Materialize.toast('Error : Please Input Cost Only In Integer Format', 3000);
+        Materialize.toast('Error : Please Input Cost Only In Positive Integer Format', 3000);
+      }
+      else if(!checkExist($scope.form.collateral)) {
+        Materialize.toast('Error : Please Input Collateral In Positive Integer Format', 3000);
+      }
+      else if(parseInt($scope.form.collateral) != $scope.form.collateral) {
+        Materialize.toast('Error : Please Input Collateral Only In Positive Integer Format', 3000);
+      }
+      else if((!checkExist($scope.form.price_per_day)) && (!checkExist($scope.form.price_per_month))) {
+        Materialize.toast('Error : Please Input Price Per Day or Month / In Positive Integer Format', 4500);
+      }
+      else if((checkExist($scope.form.price_per_day)) && (parseInt($scope.form.price_per_day) != $scope.form.price_per_day)) {
+        Materialize.toast('Error : Please Input Price Per Day Only / In Positive Integer Format', 4000);
+      }
+      else if((checkExist($scope.form.price_per_month)) && (parseInt($scope.form.price_per_month) != $scope.form.price_per_month)) {
+        Materialize.toast('Error : Please Input Price Per Month Only / In Positive Integer Format', 4000);
       }
       else {
+        if($scope.form.price_per_day === undefined) {
+          $scope.form.price_per_day = null;
+        }
+        if($scope.form.price_per_month === undefined) {
+          $scope.form.price_per_month = null;
+        }
         ipcRenderer.send('add-motorcycle', $scope.form);
         $('#addMotorcycle').closeModal();
         $route.reload();
@@ -360,6 +387,18 @@ angular.module('motorcycleApp')
         }
       });
       return check;
+    };
+    var checkExist = function (value) {
+      if(value === null) {
+        return false;
+      }
+      else if(value === '') {
+        return false;
+      }
+      else if(value === undefined) {
+        return false;
+      }
+      return true;
     };
     $scope.resetForm = function () {
       $scope.form = {
@@ -407,19 +446,34 @@ angular.module('motorcycleApp')
       else if($scope.form.plate_number === '') {
         Materialize.toast('Error : Please Input Plate Number of Motorcycle', 3000);
       }
-      else if(($scope.form.cost == null) || ($scope.form.cost === '')) {
-        Materialize.toast('Error : Please Input Cost of Motorcycle', 3000);
+      else if(!checkExist($scope.form.cost)) {
+        Materialize.toast('Error : Please Input Cost In Positive Integer Format', 3000);
       }
       else if(parseInt($scope.form.cost) != $scope.form.cost) {
-        Materialize.toast('Error : Please Input Cost Only In Integer Format', 3000);
+        Materialize.toast('Error : Please Input Cost Only In Positive Integer Format', 3000);
       }
-      else if(($scope.form.collateral == null) || ($scope.form.collateral === '')) {
-        Materialize.toast('Error : Please Input Collateral', 3000);
+      else if(!checkExist($scope.form.collateral)) {
+        Materialize.toast('Error : Please Input Collateral In Positive Integer Format', 3000);
       }
-      else if((($scope.form.price_per_day == null) || ($scope.form.price_per_day === '')) && (($scope.form.price_per_month == null) || ($scope.form.price_per_month === ''))) {
-        Materialize.toast('Error : Please Input Price per Day or Month or Both', 3000);
+      else if(parseInt($scope.form.collateral) != $scope.form.collateral) {
+        Materialize.toast('Error : Please Input Collateral Only In Positive Integer Format', 3000);
+      }
+      else if((!checkExist($scope.form.price_per_day)) && (!checkExist($scope.form.price_per_month))) {
+        Materialize.toast('Error : Please Input Price Per Day or Month / In Positive Integer Format', 4500);
+      }
+      else if((checkExist($scope.form.price_per_day)) && (parseInt($scope.form.price_per_day) != $scope.form.price_per_day)) {
+        Materialize.toast('Error : Please Input Price Per Day Only / In Positive Integer Format', 4000);
+      }
+      else if((checkExist($scope.form.price_per_month)) && (parseInt($scope.form.price_per_month) != $scope.form.price_per_month)) {
+        Materialize.toast('Error : Please Input Price Per Month Only / In Positive Integer Format', 4000);
       }
       else {
+        if($scope.form.price_per_day === undefined) {
+          $scope.form.price_per_day = null;
+        }
+        if($scope.form.price_per_month === undefined) {
+          $scope.form.price_per_month = null;
+        }
         ipcRenderer.send('edit-motorcycle', $scope.form);
         $('#editMotorcycle').closeModal();
         $route.reload();

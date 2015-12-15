@@ -100,7 +100,7 @@
               <input type="number" class="center-align" ng-model="rental.amount" ng-disabled="rental.date_rent !== null">
             </div>
             <div ng-show="rental.type == 'day'">
-              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'day') : 'None' }}
+              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.date_rent, rental.amount, 1, 'day') : 'None' }}
             </div>
             <div ng-show="rental.type == 'day'">
               <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price * rental.amount : 'None' }}
@@ -118,7 +118,7 @@
               <input type="number" class="center-align" ng-model="rental.amount" ng-disabled="rental.date_rent !== null">
             </div>
             <div ng-show="rental.type == 'month'">
-              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.amount, 1, 'month') : 'None' }}
+              <strong>Return Date : </strong>{{ rental.amount > 0 ? getNextDate(rental.date_rent, rental.amount, 1, 'month') : 'None' }}
             </div>
             <div ng-show="rental.type == 'month'">
               <strong>Cost : </strong> {{ rental.amount > 0 ? rental.price * rental.amount : 'None' }}
